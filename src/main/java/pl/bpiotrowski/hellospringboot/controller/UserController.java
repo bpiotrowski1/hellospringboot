@@ -9,24 +9,31 @@ import java.util.Collection;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping
-    public Collection<User> findAllUsers() {
+    public Collection<User> findAllUsers(@RequestParam(required = false, name = "sortOrder") String sort) {
         return userService.findAll();
     }
 
-    @GetMapping
-    @RequestMapping("/get")
-    public User getUser() {
-        return userService.findUser();
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable String id) {
+        return userService.findUser(id);
     }
 
     @PostMapping
-    public void saveUser(@RequestBody User user) {
-        userService.saveUser(user);
+    public User saveUser(@RequestBody User user) {
+        if(userService.findUser(user.getId()) != null) {
+            deleteUser(user.getId());
+        }
+        return userService.saveUser(user);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable String id) {
+        userService.deleteUser(id);
     }
 }

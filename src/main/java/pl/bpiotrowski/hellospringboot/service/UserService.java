@@ -10,21 +10,21 @@ public class UserService {
 
     private Map<String, User> users = new HashMap<>();
 
-    public List<User> findAll() {
-        return Collections.singletonList(findUser());
+    public Collection<User> findAll() {
+        return users.values();
     }
 
-    public User findUser() {
-        User user = new User();
-        user.setName("Jan");
-        user.setLastName("Kowalski");
+    public User findUser(String id) {
+        return users.get(id);
+    }
 
+    public User saveUser(User user) {
+        user.setId(UUID.randomUUID().toString());
+        users.put(user.getId(), user);
         return user;
     }
 
-    public void saveUser(User user) {
-        user.setId(UUID.randomUUID().toString());
-        System.out.println("Saved user: " + user);
-        users.put(user.getId(), user);
+    public void deleteUser(String id) {
+        users.remove(id);
     }
 }
